@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO Chat</title>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form id="chat-form">
+      <input id="message-input" type="text" placeholder="Escriba un mensaje...">
+      <button type="submit">Enviar</button>
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js" integrity="sha512-xbQU0+iHqhVt7VIXi6vBJKPh3IQBF5B84sSHdjKiSccyX/1ZI7Vnkt2/8y8uruj63/DVmCxfUNohPNruthTEQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+      const socket = io("http://localhost:3000");
+      const messageList = document.getElementById('messages');
+      const chatForm = document.getElementById('chat-form');
+      const messageInput = document.getElementById('message-input');
+
+      chatForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        socket.emit('chat message', messageInput.value);
+        messageInput.value = '';
+      });
+
+      socket.on('chat message', (msg) => {
+        const messageItem = document.createElement('li');
+        messageItem.textContent = msg;
+        messageList.appendChild(messageItem);
+      });
+    </script>
+  </body>
+</html>
