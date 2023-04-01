@@ -1,16 +1,29 @@
 const express = require('express');
 const { configuracionSocket } = require('./sockets/socket');
-const app = express()
+const mongoose = require("mongoose")
+mongoose.connect("mongodb+srv://marcoasto:marcoasto@cluster0.pfcoh4w.mongodb.net/test")
 
+
+const Banda = mongoose.model("banda", { name: String, votes: Number })
+const app = express()
 app.use(express.json())
 app.use(require("cors")())
-app.use(require("express").static(require("path").resolve(__dirname, 'public')))
+
+
+
 
 
 const server = require('http').createServer(app);
-configuracionSocket(server);
+configuracionSocket(server,Banda);
 
-
+app.get('/ver-bandas', async (req, res) => {
+    const bandas = await Banda.find()
+    res.status(200).json({
+        ok: true,
+        bandas,
+    })
+    
+})
 
 
 
